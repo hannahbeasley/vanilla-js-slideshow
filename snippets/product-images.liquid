@@ -21,7 +21,7 @@
     {% if product.images.size == 1 %}
       {% assign image = featured_image %}
       <figure class="product__image--single">
-        {% render 'lazyload-image' %}
+        {% render 'lazyload-image', image: image %}
       </figure>
   
     {% elsif product.images.size > 1 %}
@@ -30,7 +30,7 @@
           <ul class="product__images--main-images">
   
             {% for image in product.images %}
-              {% render 'product-images-image' %}
+              {% render 'product-images-image', image: image %}
             {% endfor %}
   
           </ul>
@@ -71,19 +71,19 @@
                 {% assign reversedImages = product.images | reverse %}
                 {% for reversedImage in reversedImages %}
                   {% assign image = reversedImages[forloop.rindex0] %}
-                  {% render 'product-images-clone' %}
+                  {% render 'product-images-clone', image: image, inLoop: inLoop %}
                 {% endfor %}
               {% endif %}
   
               {% for image in product.images %}
                 {% assign inLoop = false %}
-                {% render 'product-images-image' %}
+                {% render 'product-images-image', image: image, inLoop: inLoop %}
               {% endfor %}
   
               {% if product.images.size > 3 %}
                 {% assign inLoop = true %}
                 {% for image in product.images %}
-                  {% render 'product-images-clone' %}
+                  {% render 'product-images-clone', image: image, inLoop: inLoop %}
                 {% endfor %}
               {% endif %}
             </ul>
