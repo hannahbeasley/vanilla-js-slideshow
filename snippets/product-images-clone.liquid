@@ -1,0 +1,14 @@
+{% unless image.src contains 'color-swatch-' %}
+
+    <!-- snippets/product-images-clone.liquid -->
+    {% assign responsive_image = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+      <ol class="image-container cloned">
+        <img itemprop="image" src="{{ image | img_url }}" class="lazyload" data-src="{{ responsive_image }}" data-format="full" data-aspectratio="{{ image.aspect_ratio }}" data-sizes="auto" alt="{{ image.alt | escape }}">
+      </ol>
+  
+      {% if inLoop and forloop.index == 4 %}
+        {% break %}
+      {% endif %}
+  
+  {% endunless %}
+  

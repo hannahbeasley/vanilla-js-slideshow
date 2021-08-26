@@ -1,0 +1,98 @@
+<!-- snippets/product-images.liquid -->
+
+{% comment %}
+    This is the main snippet for the slideshow markup.
+
+    The slideshow clones the correct number of images so that it can appear infinite. (And does this using liquid to keep things as fast as possible)
+
+    The two other snippets in this folder generate the main slideshow images and the image clones.
+{% endcomment %}
+
+{% comment %}
+    Required variables: 
+        current_variant (object)
+        product (object)
+{% endcomment %}
+
+<div class="product__images">
+
+    {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+  
+    {% if product.images.size == 1 %}
+      {% assign image = featured_image %}
+      <figure class="product__image--single">
+        {% render 'lazyload-image' %}
+      </figure>
+  
+    {% elsif product.images.size > 1 %}
+      <div class="product__images--slider">
+        <div class="product__images--slider-main">
+          <ul class="product__images--main-images">
+  
+            {% for image in product.images %}
+              {% render 'product-images-image' %}
+            {% endfor %}
+  
+          </ul>
+          <nav class="product__images--nav arrows">
+            <ul>
+              <li>
+                <button class="product__images--nav-prev">
+                  <i class="mask icon-arrow-left"></i>
+                  <span class="visibility-hidden">
+                    {{ 'general.slider.previous' | t }}
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="product__images--nav-next">
+                  <i class="mask icon-arrow-right"></i>
+                  <span class="visibility-hidden">
+                    {{ 'general.slider.next' | t }}
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </nav>
+  
+        </div>
+  
+        <nav class="product__images--nav dots">
+          <ul>
+          </ul>
+        </nav>
+  
+        {% if product.images.size > 3 %}
+          <div class="product__images--slider-thumbs">
+            <ul class="product__images--thumbs-images">
+  
+              {% if product.images.size > 3 %}
+                {% assign inLoop = true %}
+                {% assign reversedImages = product.images | reverse %}
+                {% for reversedImage in reversedImages %}
+                  {% assign image = reversedImages[forloop.rindex0] %}
+                  {% render 'product-images-clone' %}
+                {% endfor %}
+              {% endif %}
+  
+              {% for image in product.images %}
+                {% assign inLoop = false %}
+                {% render 'product-images-image' %}
+              {% endfor %}
+  
+              {% if product.images.size > 3 %}
+                {% assign inLoop = true %}
+                {% for image in product.images %}
+                  {% render 'product-images-clone' %}
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </div>
+  
+        {% endif %}
+  
+      </div>
+    {% endif %}
+  
+  </div>
+  
